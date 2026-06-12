@@ -34,6 +34,9 @@ namespace Deucarian.Logging
             startTimestamp = active ? Stopwatch.GetTimestamp() : 0L;
         }
 
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         internal static DeucarianLogScope Start(DLog logger, string operation, DeucarianLogLevel level, Object context)
         {
             if (logger == null || !DeucarianLog.IsEnabledFor(level))
@@ -49,6 +52,9 @@ namespace Deucarian.Logging
         /// <summary>
         /// Logs operation completion once. Calling this method more than once is safe.
         /// </summary>
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         public void Dispose()
         {
             if (disposed)

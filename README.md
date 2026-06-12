@@ -4,6 +4,46 @@ Deucarian Logging is a small, dependency-light wrapper around Unity's built-in `
 
 It exists so package code can use one tiny logging API without bringing in a large logging framework. This package intentionally does not depend on `com.unity.logging`.
 
+## Why use Deucarian Logging?
+
+Use Deucarian Logging when you want package diagnostics to feel consistent across the Deucarian ecosystem while still behaving like normal Unity logs.
+
+- Consistent logging across packages.
+- Category-based diagnostics.
+- Runtime filtering by level.
+- Ring buffer support for local debug tools and bug reports.
+- Future telemetry integration through sinks.
+- Preserves normal Unity console behavior.
+- Preserves stack traces.
+- Preserves source hyperlinks.
+- Preserves context object navigation.
+
+```csharp
+private static readonly DLog Log =
+    DLog.For("ObjectLoading");
+
+Log.Info("Asset bundle loaded.");
+```
+
+Output:
+
+```text
+[Deucarian.ObjectLoading] Asset bundle loaded.
+```
+
+```csharp
+private static readonly DLog Log =
+    DLog.For("ObjectLoading.AssetBundleLoader");
+
+Log.Info("Download completed.");
+```
+
+Output:
+
+```text
+[Deucarian.ObjectLoading.AssetBundleLoader] Download completed.
+```
+
 ## Architecture Boundary
 
 This package is local logging only:
@@ -34,6 +74,8 @@ com.deucarian.logging
 ```
 
 The package requires Unity 2022.3 LTS or newer.
+
+Current package version: `0.2.0`.
 
 ## Quick Start
 
@@ -71,6 +113,40 @@ private static readonly DLog NetworkLog = DLog.For("Networking");
 ```
 
 Categories are intentionally strings, not enums. Deucarian packages and user projects should be able to add categories freely without modifying this package.
+
+Recommended category hierarchy:
+
+Package level:
+
+- `ObjectLoading`
+- `ApiHelper`
+- `Session`
+- `Selection`
+- `Theming`
+- `PackageInstaller`
+
+Subsystem level:
+
+- `ObjectLoading.AssetBundleLoader`
+- `ObjectLoading.Downloader`
+- `ApiHelper.Requests`
+- `Session.Authentication`
+
+Avoid per-instance categories. Categories should identify systems and packages, not individual runtime objects.
+
+Good:
+
+```csharp
+DLog.For("ObjectLoading");
+DLog.For("ObjectLoading.AssetBundleLoader");
+```
+
+Bad:
+
+```csharp
+DLog.For(gameObject.name);
+DLog.For(Guid.NewGuid().ToString());
+```
 
 Optional convenience constants are available for common package categories:
 
@@ -142,6 +218,26 @@ Exception objects are preserved for exception logs so tools can inspect them. Do
 - `UnityConsoleLogSink` is registered by default and forwards entries to `UnityEngine.Debug`.
 
 In Unity 2022.3 and newer, trivial logging wrapper methods are marked with `UnityEngine.HideInCallstack` where available to reduce console callstack clutter. This is only a cosmetic cleanup and is not required for correctness.
+
+## Stack traces and hyperlinks
+
+Deucarian Logging uses Unity's native logging backend. The default console sink forwards entries through:
+
+- `Debug.Log`
+- `Debug.LogWarning`
+- `Debug.LogError`
+- `Debug.LogException`
+
+It does not replace the Unity console and does not implement a custom console.
+
+Normal Unity console behavior is preserved:
+
+- Double-clicking logs still opens source files.
+- Exceptions remain clickable and navigable through Unity's exception handling.
+- Context objects remain clickable when passed to log methods.
+- Unity console filtering continues to work normally.
+
+Where supported, trivial wrapper methods use `UnityEngine.HideInCallstack` behind Unity version guards. In Unity 2022.3 and newer this can reduce callstack noise and make caller code easier to see. If the attribute is unavailable, the package falls back gracefully and still compiles.
 
 ## Runtime Defaults
 
@@ -232,6 +328,17 @@ The ring buffer is the local bridge toward:
 - a future telemetry sink in a separate telemetry package
 
 The logging package itself remains local-only.
+
+## Future ecosystem integration
+
+Logging is intended to be the local diagnostics layer for Deucarian packages:
+
+- Object Loading can use scoped timing logs for asset bundle loads and downloads.
+- ApiHelper can log request durations and local request lifecycle events.
+- Session can log authentication events without collecting user data.
+- Package Installer can log registry activity.
+- A future Telemetry package can register a sink.
+- Logging itself remains local-only.
 
 ## Samples
 

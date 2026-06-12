@@ -93,6 +93,9 @@ namespace Deucarian.Logging
             return new DLog(NormalizeCategory(category));
         }
 
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         internal static void Dispatch(
             string category,
             DeucarianLogLevel level,
@@ -134,6 +137,9 @@ namespace Deucarian.Logging
             }
         }
 
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         internal static string NormalizeCategory(string category)
         {
             string normalized = string.IsNullOrWhiteSpace(category)
@@ -160,6 +166,9 @@ namespace Deucarian.Logging
             return string.IsNullOrWhiteSpace(normalized) ? DefaultCategory : normalized;
         }
 
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         internal static string FormatCategoryLabel(string category)
         {
             string normalized = NormalizeCategory(category);
@@ -179,11 +188,17 @@ namespace Deucarian.Logging
             return prefix + "." + normalized;
         }
 
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         internal static bool IsEnabledFor(DeucarianLogLevel level)
         {
             return ShouldLog(level);
         }
 
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         private static bool ShouldLog(DeucarianLogLevel level)
         {
             if (!DeucarianLogSettings.Enabled || level == DeucarianLogLevel.None)
@@ -194,6 +209,9 @@ namespace Deucarian.Logging
             return level >= DeucarianLogSettings.MinimumLevel;
         }
 
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         private static IDeucarianLogSink[] SnapshotSinks()
         {
             lock (SyncRoot)
@@ -202,6 +220,9 @@ namespace Deucarian.Logging
             }
         }
 
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         private static int GetCurrentFrame()
         {
             try
@@ -214,6 +235,9 @@ namespace Deucarian.Logging
             }
         }
 
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         private static void ReportSinkFailure(IDeucarianLogSink sink, Exception exception)
         {
             if (isReportingSinkFailure)

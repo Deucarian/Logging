@@ -2,6 +2,18 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] - 2026-06-12
+
+### Added
+
+- Documented Unity console stack trace preservation and source hyperlink preservation.
+- Documented that context object navigation is preserved by the default Unity console sink.
+- Broadened `UnityEngine.HideInCallstack` usage on trivial logging wrappers where Unity supports it.
+- Documented ring buffer usage as a local bridge for debug consoles, bug reports, and future telemetry sinks.
+- Documented timing scopes for Object Loading, ApiHelper, Package Installer, and similar package workflows.
+- Clarified sink architecture as the extension point for future ecosystem integrations.
+- Clarified telemetry-ready extension points while keeping this package local-only.
+
 ## [0.1.0] - 2026-06-12
 
 ### Added

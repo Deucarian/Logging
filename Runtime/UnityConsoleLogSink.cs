@@ -12,6 +12,9 @@ namespace Deucarian.Logging
         /// Writes a log entry to the Unity console.
         /// </summary>
         /// <param name="entry">The entry to write.</param>
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         public void Log(in DeucarianLogEntry entry)
         {
             string formattedMessage = FormatMessage(in entry);
@@ -35,6 +38,9 @@ namespace Deucarian.Logging
             }
         }
 
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         private static void LogException(in DeucarianLogEntry entry, string formattedMessage)
         {
             if (entry.Exception == null)
@@ -47,6 +53,9 @@ namespace Deucarian.Logging
             UnityEngine.Debug.LogException(entry.Exception, entry.Context);
         }
 
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         private static string FormatMessage(in DeucarianLogEntry entry)
         {
             var builder = new StringBuilder(128);

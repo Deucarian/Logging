@@ -23,6 +23,9 @@ namespace Deucarian.Logging
         /// </summary>
         /// <param name="category">Category name such as Inventory, SaveSystem, Audio, UI, or Networking.</param>
         /// <returns>A logger for the normalized category.</returns>
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         public static DLog For(string category)
         {
             return DeucarianLog.CreateLogger(category);
@@ -113,6 +116,9 @@ namespace Deucarian.Logging
         /// <param name="operation">Operation name to include in log messages.</param>
         /// <param name="context">Optional Unity context object.</param>
         /// <returns>A disposable measurement scope.</returns>
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         public DeucarianLogScope Scope(string operation, Object context = null)
         {
             return Measure(operation, DeucarianLogLevel.Debug, context);
@@ -125,6 +131,9 @@ namespace Deucarian.Logging
         /// <param name="level">Log level used for start and completion messages.</param>
         /// <param name="context">Optional Unity context object.</param>
         /// <returns>A disposable measurement scope.</returns>
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         public DeucarianLogScope Scope(string operation, DeucarianLogLevel level, Object context = null)
         {
             return Measure(operation, level, context);
@@ -136,6 +145,9 @@ namespace Deucarian.Logging
         /// <param name="operation">Operation name to include in log messages.</param>
         /// <param name="context">Optional Unity context object.</param>
         /// <returns>A disposable measurement scope.</returns>
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         public DeucarianLogScope Measure(string operation, Object context = null)
         {
             return Measure(operation, DeucarianLogLevel.Debug, context);
@@ -148,11 +160,17 @@ namespace Deucarian.Logging
         /// <param name="level">Log level used for start and completion messages.</param>
         /// <param name="context">Optional Unity context object.</param>
         /// <returns>A disposable measurement scope.</returns>
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         public DeucarianLogScope Measure(string operation, DeucarianLogLevel level, Object context = null)
         {
             return DeucarianLogScope.Start(this, operation, level, context);
         }
 
+#if UNITY_2022_2_OR_NEWER
+        [UnityEngine.HideInCallstack]
+#endif
         private void Log(DeucarianLogLevel level, string message, Exception exception, Object context)
         {
             DeucarianLog.Dispatch(Category, level, message, exception, context);
