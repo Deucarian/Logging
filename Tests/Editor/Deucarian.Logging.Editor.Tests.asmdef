@@ -1,0 +1,22 @@
+{
+  "name": "Deucarian.Logging.Editor.Tests",
+  "rootNamespace": "Deucarian.Logging.Editor.Tests",
+  "references": [
+    "Deucarian.Logging",
+    "Deucarian.Logging.Editor"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "noEngineReferences": false
+}

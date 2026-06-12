@@ -1,0 +1,23 @@
+{
+  "name": "com.deucarian.logging",
+  "displayName": "Deucarian Logging",
+  "version": "0.1.0",
+  "unity": "2022.3",
+  "description": "A small, dependency-light logging wrapper for Deucarian Unity packages.",
+  "keywords": [
+    "deucarian",
+    "logging",
+    "debug",
+    "unity"
+  ],
+  "author": {
+    "name": "Deucarian"
+  },
+  "samples": [
+    {
+      "displayName": "Basic Logging Demo",
+      "description": "Shows how to create and use a Deucarian category logger.",
+      "path": "Samples~/Basic Logging Demo"
+    }
+  ]
+}
