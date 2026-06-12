@@ -116,7 +116,7 @@ namespace Deucarian.Logging
                 GetCurrentFrame(),
                 level,
                 category,
-                message,
+                DeucarianLogUtility.RedactSensitiveData(message),
                 exception,
                 context);
 
@@ -177,6 +177,11 @@ namespace Deucarian.Logging
             }
 
             return prefix + "." + normalized;
+        }
+
+        internal static bool IsEnabledFor(DeucarianLogLevel level)
+        {
+            return ShouldLog(level);
         }
 
         private static bool ShouldLog(DeucarianLogLevel level)

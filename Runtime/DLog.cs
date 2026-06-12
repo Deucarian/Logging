@@ -107,6 +107,52 @@ namespace Deucarian.Logging
             Log(DeucarianLogLevel.Exception, message ?? exception?.Message, exception, context);
         }
 
+        /// <summary>
+        /// Logs the start and completion of an operation at debug level.
+        /// </summary>
+        /// <param name="operation">Operation name to include in log messages.</param>
+        /// <param name="context">Optional Unity context object.</param>
+        /// <returns>A disposable measurement scope.</returns>
+        public DeucarianLogScope Scope(string operation, Object context = null)
+        {
+            return Measure(operation, DeucarianLogLevel.Debug, context);
+        }
+
+        /// <summary>
+        /// Logs the start and completion of an operation at the requested level.
+        /// </summary>
+        /// <param name="operation">Operation name to include in log messages.</param>
+        /// <param name="level">Log level used for start and completion messages.</param>
+        /// <param name="context">Optional Unity context object.</param>
+        /// <returns>A disposable measurement scope.</returns>
+        public DeucarianLogScope Scope(string operation, DeucarianLogLevel level, Object context = null)
+        {
+            return Measure(operation, level, context);
+        }
+
+        /// <summary>
+        /// Logs the start and completion of an operation at debug level.
+        /// </summary>
+        /// <param name="operation">Operation name to include in log messages.</param>
+        /// <param name="context">Optional Unity context object.</param>
+        /// <returns>A disposable measurement scope.</returns>
+        public DeucarianLogScope Measure(string operation, Object context = null)
+        {
+            return Measure(operation, DeucarianLogLevel.Debug, context);
+        }
+
+        /// <summary>
+        /// Logs the start and completion of an operation at the requested level.
+        /// </summary>
+        /// <param name="operation">Operation name to include in log messages.</param>
+        /// <param name="level">Log level used for start and completion messages.</param>
+        /// <param name="context">Optional Unity context object.</param>
+        /// <returns>A disposable measurement scope.</returns>
+        public DeucarianLogScope Measure(string operation, DeucarianLogLevel level, Object context = null)
+        {
+            return DeucarianLogScope.Start(this, operation, level, context);
+        }
+
         private void Log(DeucarianLogLevel level, string message, Exception exception, Object context)
         {
             DeucarianLog.Dispatch(Category, level, message, exception, context);

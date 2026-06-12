@@ -2,6 +2,7 @@ namespace Deucarian.Logging
 {
     /// <summary>
     /// Receives Deucarian log entries from the central dispatcher.
+    /// Future packages can implement this interface to forward entries elsewhere without changing this package.
     /// </summary>
     public interface IDeucarianLogSink
     {

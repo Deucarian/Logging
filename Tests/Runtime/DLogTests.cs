@@ -34,6 +34,18 @@ namespace Deucarian.Logging.Tests
         }
 
         [Test]
+        public void CategoryConstantsArePlainStrings()
+        {
+            Assert.AreEqual(typeof(string), DeucarianLogCategories.PackageInstaller.GetType());
+            Assert.AreEqual("PackageInstaller", DeucarianLogCategories.PackageInstaller);
+            Assert.AreEqual("ObjectLoading", DeucarianLogCategories.ObjectLoading);
+            Assert.AreEqual("Theming", DeucarianLogCategories.Theming);
+            Assert.AreEqual("Selection", DeucarianLogCategories.Selection);
+            Assert.AreEqual("Session", DeucarianLogCategories.Session);
+            Assert.AreEqual("ApiHelper", DeucarianLogCategories.ApiHelper);
+        }
+
+        [Test]
         public void LogsBelowMinimumLevelAreFiltered()
         {
             DeucarianLogSettings.MinimumLevel = DeucarianLogLevel.Warning;
@@ -53,6 +65,15 @@ namespace Deucarian.Logging.Tests
             Assert.AreEqual(1, sink.Entries.Count);
             Assert.AreEqual(DeucarianLogLevel.Warning, sink.Entries[0].Level);
             Assert.AreEqual("visible", sink.Entries[0].Message);
+        }
+
+        [Test]
+        public void RegisteredSinkReceivesRedactedMessages()
+        {
+            DLog.For("ApiHelper").Info("token=abc123");
+
+            Assert.AreEqual(1, sink.Entries.Count);
+            Assert.AreEqual("token=[REDACTED]", sink.Entries[0].Message);
         }
 
         [Test]
@@ -98,6 +119,62 @@ namespace Deucarian.Logging.Tests
         }
 
         [Test]
+        public void ScopedMeasurementLogsCompletion()
+        {
+            DeucarianLogSettings.MinimumLevel = DeucarianLogLevel.Debug;
+            DLog log = DLog.For(DeucarianLogCategories.ObjectLoading);
+
+            using (log.Measure("Load asset bundle"))
+            {
+            }
+
+            Assert.AreEqual(2, sink.Entries.Count);
+            Assert.AreEqual("Started: Load asset bundle", sink.Entries[0].Message);
+            Assert.IsTrue(sink.Entries[1].Message.StartsWith("Completed: Load asset bundle in "));
+            Assert.IsTrue(sink.Entries[1].Message.EndsWith(" ms"));
+        }
+
+        [Test]
+        public void ScopedMeasurementDoesNotLogWhenLevelIsFiltered()
+        {
+            DeucarianLogSettings.MinimumLevel = DeucarianLogLevel.Warning;
+            DLog log = DLog.For(DeucarianLogCategories.ObjectLoading);
+
+            using (log.Measure("Load asset bundle", DeucarianLogLevel.Debug))
+            {
+            }
+
+            Assert.AreEqual(0, sink.Entries.Count);
+        }
+
+        [Test]
+        public void ScopedMeasurementCanBeDisposedTwice()
+        {
+            DeucarianLogSettings.MinimumLevel = DeucarianLogLevel.Debug;
+            DLog log = DLog.For(DeucarianLogCategories.PackageInstaller);
+
+            DeucarianLogScope scope = log.Scope("Install package");
+            scope.Dispose();
+            scope.Dispose();
+
+            Assert.AreEqual(2, sink.Entries.Count);
+        }
+
+        [Test]
+        public void SinkApiReceivesEntriesWithoutTelemetryDependency()
+        {
+            DeucarianLog.ClearSinks();
+            var externalSink = new ExternalPackageSink();
+            DeucarianLog.RegisterSink(externalSink);
+
+            DLog.For("FutureTelemetryExtension").Info("local sink entry");
+
+            Assert.AreEqual(1, externalSink.Count);
+            Assert.AreEqual("FutureTelemetryExtension", externalSink.LastEntry.Category);
+            Assert.AreEqual("local sink entry", externalSink.LastEntry.Message);
+        }
+
+        [Test]
         public void SinkExceptionsDoNotEscapeOrStopOtherSinks()
         {
             DeucarianLog.ClearSinks();
@@ -118,6 +195,18 @@ namespace Deucarian.Logging.Tests
             public void Log(in DeucarianLogEntry entry)
             {
                 entries.Add(entry);
+            }
+        }
+
+        private sealed class ExternalPackageSink : IDeucarianLogSink
+        {
+            public int Count { get; private set; }
+            public DeucarianLogEntry LastEntry { get; private set; }
+
+            public void Log(in DeucarianLogEntry entry)
+            {
+                Count++;
+                LastEntry = entry;
             }
         }
 
