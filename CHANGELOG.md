@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.1] - 2026-06-15
+
+### Fixed
+
+- Added Unity `.meta` files for package assets so Git UPM installs do not ignore immutable package files.
+- Guarded runtime and editor test assemblies with `UNITY_INCLUDE_TESTS`.
+- Declared the Unity Test Framework dependency so committed test assemblies resolve their NUnit references when tests are included.
+
 ## [0.2.0] - 2026-06-12
 
 ### Added
