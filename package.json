@@ -11,7 +11,7 @@
     "unity"
   ],
   "dependencies": {
-    "com.deucarian.editor": "0.1.1"
+    "com.deucarian.editor": "0.1.2"
   },
   "author": {
     "name": "Deucarian"
