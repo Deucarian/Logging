@@ -75,9 +75,9 @@ Or install it by package name from a configured scoped registry:
 com.deucarian.logging
 ```
 
-The package requires Unity 2022.3 LTS or newer.
+The package requires Unity 2021.3 LTS or newer.
 
-Current package version: `0.2.4`.
+Current package version: `0.2.5`.
 
 ## Usage
 
@@ -219,7 +219,7 @@ Exception objects are preserved for exception logs so tools can inspect them. Do
 - `RingBufferLogSink` keeps the latest log entries in memory for later in-game consoles or bug report exporters.
 - `UnityConsoleLogSink` is registered by default and forwards entries to `UnityEngine.Debug`.
 
-In Unity 2022.3 and newer, trivial logging wrapper methods are marked with `UnityEngine.HideInCallstack` where available to reduce console callstack clutter. This is only a cosmetic cleanup and is not required for correctness.
+In Unity 2022.2 and newer, trivial logging wrapper methods are marked with `UnityEngine.HideInCallstack` where available to reduce console callstack clutter. This is only a cosmetic cleanup and is not required for correctness.
 
 ## Stack traces and hyperlinks
 
@@ -239,7 +239,7 @@ Normal Unity console behavior is preserved:
 - Context objects remain clickable when passed to log methods.
 - Unity console filtering continues to work normally.
 
-Where supported, trivial wrapper methods use `UnityEngine.HideInCallstack` behind Unity version guards. In Unity 2022.3 and newer this can reduce callstack noise and make caller code easier to see. If the attribute is unavailable, the package falls back gracefully and still compiles.
+Where supported, trivial wrapper methods use `UnityEngine.HideInCallstack` behind Unity version guards. In Unity 2022.2 and newer this can reduce callstack noise and make caller code easier to see. If the attribute is unavailable, the package falls back gracefully and still compiles.
 
 ## Runtime Defaults
 
