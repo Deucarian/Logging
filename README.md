@@ -75,7 +75,7 @@ com.deucarian.logging
 
 The package requires Unity 2022.3 LTS or newer.
 
-Current package version: `0.2.0`.
+Current package version: `0.2.2`.
 
 ## Quick Start
 
@@ -249,10 +249,13 @@ Where supported, trivial wrapper methods use `UnityEngine.HideInCallstack` behin
 
 In the Unity Editor, these values can be edited at **Project Settings > Deucarian > Logging**. The v0 editor settings are stored in `EditorPrefs` and applied to runtime static settings while in the Editor.
 
-Useful editor menu items:
+Useful editor menu items live under **Deucarian > Logging**:
 
-- **Tools > Deucarian > Logging > Reset Logging Settings**
-- **Tools > Deucarian > Logging > Test Log Messages**
+- **Open Logging Settings**
+- **Reset Logging Settings**
+- **Test Log Messages**
+
+These menu entries are owned by `com.deucarian.logging`; the package does not require a central Deucarian tooling registry and does not add telemetry.
 
 ## Custom Sinks
 

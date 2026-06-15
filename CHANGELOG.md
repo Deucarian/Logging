@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.2] - 2026-06-15
+
+### Added
+
+- Added the package-local `Deucarian > Logging > Open Logging Settings` menu item.
+
+### Changed
+
+- Moved logging reset and test-log menu items under `Deucarian > Logging`.
+- Documented the Deucarian menu entries and kept logging local-only with no telemetry additions.
+
 ## [0.2.1] - 2026-06-15
 
 ### Fixed

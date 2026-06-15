@@ -56,6 +56,25 @@ namespace Deucarian.Logging.Editor.Tests
             Assert.AreEqual(DeucarianLoggingSettingsProvider.SettingsPath, provider.settingsPath);
         }
 
+        [Test]
+        public void MenuResetRestoresExpectedDefaults()
+        {
+            DeucarianLoggingEditorSettings.SetValues(
+                false,
+                DeucarianLogLevel.Error,
+                true,
+                true,
+                "Custom");
+
+            DeucarianLoggingMenu.ResetLoggingSettings();
+
+            Assert.IsTrue(DeucarianLoggingEditorSettings.Enabled);
+            Assert.AreEqual(DeucarianLogLevel.Debug, DeucarianLoggingEditorSettings.MinimumLevel);
+            Assert.IsFalse(DeucarianLoggingEditorSettings.IncludeTimestamp);
+            Assert.IsFalse(DeucarianLoggingEditorSettings.IncludeFrame);
+            Assert.AreEqual("Deucarian", DeucarianLoggingEditorSettings.Prefix);
+        }
+
         private readonly struct SettingsSnapshot
         {
             private readonly bool enabled;
