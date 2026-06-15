@@ -2,6 +2,15 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.4] - 2026-06-15
+
+### Changed
+
+- Moved logging editor menu items under `Tools > Deucarian > Logging`.
+- Updated the shared editor helper dependency to `com.deucarian.editor` `0.1.1`.
+- Removed `com.unity.test-framework` from consumer-facing package dependencies.
+- Updated README structure with usage, tests, and license sections.
+
 ## [0.2.3] - 2026-06-15
 
 ### Changed

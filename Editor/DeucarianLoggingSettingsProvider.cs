@@ -87,7 +87,7 @@ namespace Deucarian.Logging.Editor
             }
 
             DeucarianEditorChrome.EndSection();
-            DeucarianEditorChrome.DrawFooterVersion("com.deucarian.logging", "0.2.3");
+            DeucarianEditorChrome.DrawFooterVersion("com.deucarian.logging", "0.2.4");
         }
     }
 }

@@ -1,5 +1,7 @@
 # Deucarian Logging
 
+## Overview
+
 Deucarian Logging is a small, dependency-light wrapper around Unity's built-in `UnityEngine.Debug` logging. It gives Deucarian Unity packages a shared category logger, consistent formatting, configurable filtering, and a simple sink extension point.
 
 It exists so package code can use one tiny logging API without bringing in a large logging framework. This package intentionally does not depend on `com.unity.logging`.
@@ -75,9 +77,9 @@ com.deucarian.logging
 
 The package requires Unity 2022.3 LTS or newer.
 
-Current package version: `0.2.3`.
+Current package version: `0.2.4`.
 
-## Quick Start
+## Usage
 
 ```csharp
 using Deucarian.Logging;
@@ -249,7 +251,7 @@ Where supported, trivial wrapper methods use `UnityEngine.HideInCallstack` behin
 
 In the Unity Editor, these values can be edited at **Project Settings > Deucarian > Logging**. The settings UI uses `com.deucarian.editor` for fixed Deucarian editor chrome while keeping logging runtime code independent. The v0 editor settings are stored in `EditorPrefs` and applied to runtime static settings while in the Editor.
 
-Useful editor menu items live under **Deucarian > Logging**:
+Useful editor menu items live under **Tools > Deucarian > Logging**:
 
 - **Open Logging Settings**
 - **Reset Logging Settings**
@@ -346,3 +348,11 @@ Logging is intended to be the local diagnostics layer for Deucarian packages:
 ## Samples
 
 Import the **Basic Logging Demo** sample from Unity's Package Manager to see a minimal MonoBehaviour using `DLog`.
+
+## Tests
+
+Run the package's EditMode tests in Unity. Runtime tests cover log utility behavior, and editor tests cover settings persistence, reset behavior, and the settings provider.
+
+## License
+
+See [LICENSE.md](LICENSE.md).

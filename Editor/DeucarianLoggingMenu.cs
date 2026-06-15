@@ -8,10 +8,12 @@ namespace Deucarian.Logging.Editor
     /// </summary>
     public static class DeucarianLoggingMenu
     {
+        private const string MenuRoot = "Tools/Deucarian/Logging/";
+
         /// <summary>
         /// Opens the Deucarian logging page in Project Settings.
         /// </summary>
-        [MenuItem("Deucarian/Logging/Open Logging Settings")]
+        [MenuItem(MenuRoot + "Open Logging Settings")]
         public static void OpenLoggingSettings()
         {
             SettingsService.OpenProjectSettings(DeucarianLoggingSettingsProvider.SettingsPath);
@@ -20,7 +22,7 @@ namespace Deucarian.Logging.Editor
         /// <summary>
         /// Restores editor logging settings to their defaults.
         /// </summary>
-        [MenuItem("Deucarian/Logging/Reset Logging Settings")]
+        [MenuItem(MenuRoot + "Reset Logging Settings")]
         public static void ResetLoggingSettings()
         {
             DeucarianLoggingEditorSettings.ResetToDefaults();
@@ -30,7 +32,7 @@ namespace Deucarian.Logging.Editor
         /// <summary>
         /// Emits one example message per log level through the Deucarian logger.
         /// </summary>
-        [MenuItem("Deucarian/Logging/Test Log Messages")]
+        [MenuItem(MenuRoot + "Test Log Messages")]
         public static void TestLogMessages()
         {
             bool previousEnabled = DeucarianLogSettings.Enabled;
