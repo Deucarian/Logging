@@ -16,6 +16,10 @@
   "author": {
     "name": "Deucarian"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Deucarian/Logging.git"
+  },
   "samples": [
     {
       "displayName": "Basic Logging Demo",

@@ -63,7 +63,13 @@ Future telemetry can plug in by implementing `IDeucarianLogSink`, for example wi
 
 ## Installation
 
-Install the package from Git:
+For normal Deucarian setup, install Deucarian Bootstrap first. Bootstrap configures the Deucarian scoped registry, installs Package Installer, and lets Unity resolve Logging when Package Installer or another package declares it.
+
+```text
+https://github.com/Deucarian/Bootstrap.git#main
+```
+
+Direct install is supported for advanced/manual setups when you are working on Logging itself or repairing a project by hand. Install the package from Git:
 
 ```text
 https://github.com/Deucarian/Logging.git
