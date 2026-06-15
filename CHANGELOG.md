@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.6] - 2026-06-15
+
+### Changed
+
+- Updated the shared editor helper dependency to `com.deucarian.editor` `0.1.2` for npmjs scoped-registry publishing.
+
 ## [0.2.5] - 2026-06-15
 
 ### Changed
