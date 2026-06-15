@@ -75,7 +75,7 @@ com.deucarian.logging
 
 The package requires Unity 2022.3 LTS or newer.
 
-Current package version: `0.2.2`.
+Current package version: `0.2.3`.
 
 ## Quick Start
 
@@ -247,7 +247,7 @@ Where supported, trivial wrapper methods use `UnityEngine.HideInCallstack` behin
 - Timestamp and frame metadata are disabled by default to keep Unity console output compact.
 - The default prefix is `Deucarian`.
 
-In the Unity Editor, these values can be edited at **Project Settings > Deucarian > Logging**. The v0 editor settings are stored in `EditorPrefs` and applied to runtime static settings while in the Editor.
+In the Unity Editor, these values can be edited at **Project Settings > Deucarian > Logging**. The settings UI uses `com.deucarian.editor` for fixed Deucarian editor chrome while keeping logging runtime code independent. The v0 editor settings are stored in `EditorPrefs` and applied to runtime static settings while in the Editor.
 
 Useful editor menu items live under **Deucarian > Logging**:
 

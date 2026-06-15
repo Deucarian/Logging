@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Deucarian.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -47,7 +48,13 @@ namespace Deucarian.Logging.Editor
         /// <inheritdoc />
         public override void OnGUI(string searchContext)
         {
-            EditorGUILayout.LabelField("Runtime Settings", EditorStyles.boldLabel);
+            DeucarianEditorChrome.DrawPackageHeader(
+                "logging",
+                "Deucarian Logging",
+                "Configure editor defaults for the runtime logging dispatcher.");
+
+            DeucarianEditorChrome.DrawSectionHeader("Runtime Settings");
+            DeucarianEditorChrome.BeginSection();
 
             EditorGUI.BeginChangeCheck();
             bool enabled = EditorGUILayout.Toggle("Enabled", DeucarianLoggingEditorSettings.Enabled);
@@ -78,6 +85,9 @@ namespace Deucarian.Logging.Editor
             {
                 DeucarianLoggingEditorSettings.ResetToDefaults();
             }
+
+            DeucarianEditorChrome.EndSection();
+            DeucarianEditorChrome.DrawFooterVersion("com.deucarian.logging", "0.2.3");
         }
     }
 }

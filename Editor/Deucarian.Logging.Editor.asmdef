@@ -2,6 +2,7 @@
   "name": "Deucarian.Logging.Editor",
   "rootNamespace": "Deucarian.Logging.Editor",
   "references": [
+    "Deucarian.Editor",
     "Deucarian.Logging"
   ],
   "includePlatforms": [

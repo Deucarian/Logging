@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.3] - 2026-06-15
+
+### Changed
+
+- Added a dependency on `com.deucarian.editor` for fixed Deucarian editor chrome.
+- Updated the logging Project Settings provider to use shared Deucarian editor header, section, and footer helpers.
+- Kept runtime logging assemblies independent from `Deucarian.Editor`.
+
 ## [0.2.2] - 2026-06-15
 
 ### Added
