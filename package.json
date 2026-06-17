@@ -1,7 +1,7 @@
 {
   "name": "com.deucarian.logging",
   "displayName": "Deucarian Logging",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "unity": "2021.3",
   "description": "A small, dependency-light logging wrapper for Deucarian Unity packages.",
   "keywords": [
