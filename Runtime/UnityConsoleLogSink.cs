@@ -78,7 +78,7 @@ namespace Deucarian.Logging
 
             builder
                 .Append('[')
-                .Append(DeucarianLog.FormatCategoryLabel(entry.Category))
+                .Append(FormatCategoryLabel(entry.Category))
                 .Append(']');
 
             if (!string.IsNullOrEmpty(entry.Message))
@@ -87,6 +87,13 @@ namespace Deucarian.Logging
             }
 
             return builder.ToString();
+        }
+
+        private static string FormatCategoryLabel(string category)
+        {
+            return DeucarianLogSettings.IncludePrefixInUnityConsole
+                ? DeucarianLog.FormatCategoryLabel(category)
+                : DeucarianLog.NormalizeCategory(category);
         }
     }
 }
