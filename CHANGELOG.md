@@ -13,6 +13,7 @@ All notable changes to this package will be documented in this file.
 ### Changed
 
 - Lowered the package Unity minimum to 2021.3 LTS now that `UnityEngine.HideInCallstack` usage is guarded for newer Unity versions.
+- Updated the shared editor helper dependency to `com.deucarian.editor` `0.1.2` for stable npm publishing.
 - Updated package metadata and documentation to match the 2021.3-compatible runtime and editor API surface.
 
 ## [0.2.4] - 2026-06-15

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using NUnit.Framework;
 
 namespace Deucarian.Logging.Tests
@@ -43,6 +44,24 @@ namespace Deucarian.Logging.Tests
             Assert.AreEqual("Selection", DeucarianLogCategories.Selection);
             Assert.AreEqual("Session", DeucarianLogCategories.Session);
             Assert.AreEqual("ApiHelper", DeucarianLogCategories.ApiHelper);
+        }
+
+        [Test]
+        public void UnityConsoleCategoryLabelOmitsPrefixByDefault()
+        {
+            Assert.IsFalse(DeucarianLogSettings.IncludePrefixInUnityConsole);
+
+            Assert.AreEqual("ReportViewer.Dev", FormatUnityConsoleCategoryLabel("ReportViewer.Dev"));
+            Assert.AreEqual("ReportViewer.Dev", FormatUnityConsoleCategoryLabel("Deucarian.ReportViewer.Dev"));
+        }
+
+        [Test]
+        public void UnityConsoleCategoryLabelCanIncludePrefix()
+        {
+            DeucarianLogSettings.IncludePrefixInUnityConsole = true;
+
+            Assert.AreEqual("Deucarian.ReportViewer.Dev", FormatUnityConsoleCategoryLabel("ReportViewer.Dev"));
+            Assert.AreEqual("Deucarian.ReportViewer.Dev", FormatUnityConsoleCategoryLabel("Deucarian.ReportViewer.Dev"));
         }
 
         [Test]
@@ -216,6 +235,16 @@ namespace Deucarian.Logging.Tests
             {
                 throw new InvalidOperationException("Expected test failure.");
             }
+        }
+
+        private static string FormatUnityConsoleCategoryLabel(string category)
+        {
+            MethodInfo method = typeof(UnityConsoleLogSink).GetMethod(
+                "FormatCategoryLabel",
+                BindingFlags.NonPublic | BindingFlags.Static);
+
+            Assert.NotNull(method);
+            return (string)method.Invoke(null, new object[] { category });
         }
     }
 }

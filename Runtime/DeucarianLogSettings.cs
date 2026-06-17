@@ -26,9 +26,14 @@ namespace Deucarian.Logging
         public static bool IncludeFrame { get; set; }
 
         /// <summary>
-        /// Gets or sets the prefix used in Unity console category labels.
+        /// Gets or sets the optional brand prefix for formatted category labels.
         /// </summary>
         public static string Prefix { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether Unity console category labels include <see cref="Prefix"/>.
+        /// </summary>
+        public static bool IncludePrefixInUnityConsole { get; set; }
 
         static DeucarianLogSettings()
         {
@@ -49,6 +54,7 @@ namespace Deucarian.Logging
             IncludeTimestamp = false;
             IncludeFrame = false;
             Prefix = "Deucarian";
+            IncludePrefixInUnityConsole = false;
         }
     }
 }
