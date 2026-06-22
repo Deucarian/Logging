@@ -1,0 +1,33 @@
+{
+  "packageId": "com.deucarian.logging",
+  "displayName": "Deucarian Logging",
+  "ownedCapabilities": [
+    "logging"
+  ],
+  "runtimeAssemblies": [
+    "Deucarian.Logging"
+  ],
+  "editorAssemblies": [
+    "Deucarian.Logging.Editor"
+  ],
+  "sampleAssemblies": [],
+  "testAssemblies": [
+    "Deucarian.Logging.Editor.Tests",
+    "Deucarian.Logging.Tests"
+  ],
+  "requiredDependencies": [
+    "com.deucarian.editor"
+  ],
+  "optionalVersionDefinedDependencies": [],
+  "allowedDirectDebugCalls": [
+    {
+      "file": "Runtime/UnityConsoleLogSink.cs"
+    },
+    {
+      "file": "Runtime/DeucarianLog.cs",
+      "containingSymbol": "DeucarianLog.ReportSinkFailure"
+    }
+  ],
+  "allowedDirectUnityObjectLifetimeCalls": [],
+  "expectedSamplesRoot": "Samples~"
+}
