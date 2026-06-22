@@ -77,7 +77,7 @@ com.deucarian.logging
 
 The package requires Unity 2021.3 LTS or newer.
 
-Current package version: `1.0.0`.
+Current package version: `1.0.1`.
 
 ## Dependencies
 

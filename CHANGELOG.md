@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [1.0.1] - 2026-06-22
+
+### Changed
+
+- Routed the editor Reset Logging Settings confirmation through the package-owned `Logging.Editor` DLog category.
+- Kept direct Unity Debug calls limited to the Unity console sink and sink-failure fallback paths.
+
 ## [1.0.0] - 2026-06-22
 
 ### Changed

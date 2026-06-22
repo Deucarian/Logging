@@ -9,6 +9,7 @@ namespace Deucarian.Logging.Editor
     public static class DeucarianLoggingMenu
     {
         private const string MenuRoot = "Tools/Deucarian/Logging/";
+        private static readonly DLog EditorLog = DLog.For("Logging.Editor");
 
         /// <summary>
         /// Opens the Deucarian logging page in Project Settings.
@@ -26,7 +27,7 @@ namespace Deucarian.Logging.Editor
         public static void ResetLoggingSettings()
         {
             DeucarianLoggingEditorSettings.ResetToDefaults();
-            UnityEngine.Debug.Log("[Deucarian.Logging] Logging settings reset.");
+            EditorLog.Info("[Deucarian.Logging] Logging settings reset.");
         }
 
         /// <summary>

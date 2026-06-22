@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEditor;
 
@@ -17,6 +18,7 @@ namespace Deucarian.Logging.Editor.Tests
         public void TearDown()
         {
             snapshot.Restore();
+            DeucarianLog.ResetSinksToDefault();
         }
 
         [Test]
@@ -59,6 +61,10 @@ namespace Deucarian.Logging.Editor.Tests
         [Test]
         public void MenuResetRestoresExpectedDefaults()
         {
+            DeucarianLog.ClearSinks();
+            var sink = new CapturingSink();
+            DeucarianLog.RegisterSink(sink);
+
             DeucarianLoggingEditorSettings.SetValues(
                 false,
                 DeucarianLogLevel.Error,
@@ -73,6 +79,25 @@ namespace Deucarian.Logging.Editor.Tests
             Assert.IsFalse(DeucarianLoggingEditorSettings.IncludeTimestamp);
             Assert.IsFalse(DeucarianLoggingEditorSettings.IncludeFrame);
             Assert.AreEqual("Deucarian", DeucarianLoggingEditorSettings.Prefix);
+            Assert.AreEqual(1, sink.Entries.Count);
+            Assert.AreEqual(DeucarianLogLevel.Info, sink.Entries[0].Level);
+            Assert.AreEqual("Logging.Editor", sink.Entries[0].Category);
+            Assert.AreEqual("[Deucarian.Logging] Logging settings reset.", sink.Entries[0].Message);
+        }
+
+        private sealed class CapturingSink : IDeucarianLogSink
+        {
+            private readonly List<DeucarianLogEntry> entries = new List<DeucarianLogEntry>();
+
+            public IReadOnlyList<DeucarianLogEntry> Entries
+            {
+                get { return entries; }
+            }
+
+            public void Log(in DeucarianLogEntry entry)
+            {
+                entries.Add(entry);
+            }
         }
 
         private readonly struct SettingsSnapshot
