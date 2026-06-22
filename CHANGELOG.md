@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [1.0.0] - 2026-06-22
+
+### Changed
+
+- Marked the current package metadata as 1.0.0 for the stable Logging package line.
+- Documented that `com.deucarian.editor` is used by the editor settings UI while runtime logging remains independent from editor helpers.
+
 ## [0.2.6] - 2026-06-15
 
 ### Changed

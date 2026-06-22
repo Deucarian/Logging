@@ -77,7 +77,11 @@ com.deucarian.logging
 
 The package requires Unity 2021.3 LTS or newer.
 
-Current package version: `0.2.6`.
+Current package version: `1.0.0`.
+
+## Dependencies
+
+`com.deucarian.editor` is an editor-only dependency used by the Logging Project Settings UI. The runtime logging assembly remains independent from `Deucarian.Editor`, and this package has no telemetry, HTTP, analytics, or `com.unity.logging` dependency.
 
 ## Usage
 
