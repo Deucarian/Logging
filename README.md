@@ -1,12 +1,14 @@
 # Deucarian Logging
 
-## Overview
+## What this is
 
-Deucarian Logging is a small, dependency-light wrapper around Unity's built-in `UnityEngine.Debug` logging. It gives Deucarian Unity packages a shared category logger, consistent formatting, configurable filtering, and a simple sink extension point.
+`com.deucarian.logging` is a small, dependency-light wrapper around Unity's built-in `UnityEngine.Debug` logging. It gives Deucarian Unity packages a shared category logger, consistent formatting, configurable filtering, and a simple sink extension point.
 
 It exists so package code can use one tiny logging API without bringing in a large logging framework. This package intentionally does not depend on `com.unity.logging`.
 
-## Why use Deucarian Logging?
+Current package version: `1.0.1`.
+
+## When to use it
 
 Use Deucarian Logging when you want package diagnostics to feel consistent across the Deucarian ecosystem while still behaving like normal Unity logs.
 
@@ -19,6 +21,39 @@ Use Deucarian Logging when you want package diagnostics to feel consistent acros
 - Preserves stack traces.
 - Preserves source hyperlinks.
 - Preserves context object navigation.
+
+## When not to use it
+
+- Do not use Logging as telemetry, analytics, crash reporting, or upload infrastructure.
+- Do not add HTTP clients, analytics SDKs, user/session tracking, or remote sinks here.
+- Do not use Logging to own diagnostics UI; local diagnostics views belong to `com.deucarian.diagnostics`.
+- Do not route package installation, editor shell, or domain behavior through Logging.
+
+## Install
+
+Stable:
+
+```json
+"com.deucarian.logging": "https://github.com/Deucarian/Logging.git#main"
+```
+
+Development:
+
+```json
+"com.deucarian.logging": "https://github.com/Deucarian/Logging.git#develop"
+```
+
+Dependencies:
+
+- `com.deucarian.editor`: editor-only dependency used by the Logging Project Settings UI. The runtime logging assembly remains independent from `Deucarian.Editor`.
+
+npm/scoped-registry distribution is deferred for now. Use Git URLs until the manual release process is finalized.
+
+## Unity compatibility
+
+Requires Unity 2021.3 or newer.
+
+## 60-second quick start
 
 ```csharp
 private static readonly DLog Log =
@@ -60,24 +95,6 @@ This package is local logging only:
 - No automatic collection of device or user data is implemented.
 
 Future telemetry can plug in by implementing `IDeucarianLogSink`, for example with a `TelemetryLogSink`, without modifying this package.
-
-## Installation
-
-Install the package from Git:
-
-```text
-https://github.com/Deucarian/Logging.git
-```
-
-Or install it by package name from a configured scoped registry:
-
-```text
-com.deucarian.logging
-```
-
-The package requires Unity 2021.3 LTS or newer.
-
-Current package version: `1.0.1`.
 
 ## Dependencies
 
@@ -213,7 +230,7 @@ It also strips query strings from full `http` and `https` URLs. This is a best-e
 
 Exception objects are preserved for exception logs so tools can inspect them. Do not create or log exceptions whose messages contain secrets.
 
-## API Overview
+## Public API map
 
 - `DLog.For(string category)` creates a category logger.
 - `Trace`, `Debug`, `Info`, `Warning`, `Error`, and `Exception` write log entries.
@@ -353,9 +370,21 @@ Logging is intended to be the local diagnostics layer for Deucarian packages:
 
 Import the **Basic Logging Demo** sample from Unity's Package Manager to see a minimal MonoBehaviour using `DLog`.
 
-## Tests
+## Validation
 
-Run the package's EditMode tests in Unity. Runtime tests cover log utility behavior, and editor tests cover settings persistence, reset behavior, and the settings provider.
+Run the shared package validator from the repository root:
+
+```powershell
+python C:/Repositories/Package-Registry/Tools/deucarian_package_validator.py --registry-root C:/Repositories/Package-Registry --repository-root . --config deucarian-package.json
+```
+
+Run the package's Runtime and EditMode tests in Unity after code or assembly definition changes. Runtime tests cover log utility behavior, and editor tests cover settings persistence, reset behavior, and the settings provider.
+
+Documentation-only updates should still pass:
+
+```powershell
+git diff --check
+```
 
 ## Architecture / Contributor Notes
 
