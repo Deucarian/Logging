@@ -54,8 +54,7 @@ namespace Deucarian.Logging.Editor
                 DeucarianEditorChrome.DrawPackageHeader(
                     "logging",
                     "Deucarian Logging",
-                    "Configure editor defaults for the runtime logging dispatcher.",
-                    24f);
+                    "Configure editor defaults for the runtime logging dispatcher.");
 
                 DeucarianEditorChrome.DrawSectionHeader("Runtime Settings");
                 DeucarianEditorChrome.BeginSection();
@@ -103,15 +102,9 @@ namespace Deucarian.Logging.Editor
                 }
 
                 EditorGUILayout.Space(6f);
-                if (DeucarianEditorWorkbenchGUI.DrawCompactIconAction(
-                        DeucarianEditorIconIds.Reset,
-                        "Reset to Defaults",
-                        "Restore the package logging defaults.",
-                        true,
-                        GUILayout.Width(164f)))
-                {
-                    DeucarianLoggingEditorSettings.ResetToDefaults();
-                }
+                DeucarianEditorSettingsActions.DrawResetToDefaultsButton(
+                    DeucarianLoggingEditorSettings.ResetToDefaults,
+                    "Restore the package logging defaults.");
 
                 DeucarianEditorChrome.EndSection();
                 DeucarianEditorChrome.DrawFooterVersion("com.deucarian.logging", "1.0.1");
