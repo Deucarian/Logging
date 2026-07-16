@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [1.0.2] - 2026-07-16
+
+### Changed
+
+- Aligned the package version and its editor-only `com.deucarian.editor` dependency to `1.0.2` for the coordinated dependency version wave.
+- Kept the runtime logging assembly independent from Deucarian Editor.
+
 ## [1.0.1] - 2026-06-22
 
 ### Changed
