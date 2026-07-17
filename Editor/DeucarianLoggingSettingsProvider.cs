@@ -103,7 +103,7 @@ namespace Deucarian.Logging.Editor
                         prefix);
                 }
 
-                EditorGUILayout.Space(6f);
+                EditorGUILayout.Space(DeucarianEditorLayoutMetrics.SurfaceVerticalPadding);
                 DeucarianEditorSettingsActions.DrawResetToDefaultsButton(
                     DeucarianLoggingEditorSettings.ResetToDefaults,
                     "Restore the package logging defaults.");
