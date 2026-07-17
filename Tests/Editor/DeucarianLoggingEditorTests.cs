@@ -85,7 +85,11 @@ namespace Deucarian.Logging.Editor.Tests
                 "Editor/DeucarianLoggingSettingsProvider.cs"));
 
             StringAssert.Contains("BeginSettingsPage", source);
+            StringAssert.DoesNotContain("BeginEmbeddedPage", source);
             StringAssert.Contains("DrawLabeledField", source);
+            StringAssert.Contains(
+                "DeucarianEditorLayoutMetrics.SurfaceVerticalPadding",
+                source);
             StringAssert.Contains("// DeucarianEditorChrome.DrawPackageHeader", source);
             StringAssert.Contains("DrawResetToDefaultsButton", source);
             StringAssert.DoesNotContain(
