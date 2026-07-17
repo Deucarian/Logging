@@ -6,7 +6,7 @@
 
 It exists so package code can use one tiny logging API without bringing in a large logging framework. This package intentionally does not depend on `com.unity.logging`.
 
-Current package version: `1.0.1`.
+Current package version: `1.0.2`.
 
 ## When to use it
 

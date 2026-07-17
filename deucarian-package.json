@@ -1,6 +1,7 @@
 {
   "packageId": "com.deucarian.logging",
   "displayName": "Deucarian Logging",
+  "samplePolicy": "compiled-example",
   "ownedCapabilities": [
     "logging"
   ],
@@ -10,7 +11,9 @@
   "editorAssemblies": [
     "Deucarian.Logging.Editor"
   ],
-  "sampleAssemblies": [],
+  "sampleAssemblies": [
+    "Deucarian.Logging.BasicLoggingDemo"
+  ],
   "testAssemblies": [
     "Deucarian.Logging.Editor.Tests",
     "Deucarian.Logging.Tests"
