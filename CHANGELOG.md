@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## [1.0.2] - 2026-07-17
+
+### Changed
+
+- Aligned the exact Editor dependency and isolated the Basic Logging sample assembly for the portfolio release.
+
 ## [1.0.1] - 2026-06-22
 
 ### Changed
