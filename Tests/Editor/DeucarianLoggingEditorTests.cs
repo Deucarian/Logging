@@ -86,8 +86,14 @@ namespace Deucarian.Logging.Editor.Tests
 
             StringAssert.Contains("BeginSettingsPage", source);
             StringAssert.Contains("DrawLabeledField", source);
-            StringAssert.Contains("DrawCompactIconAction", source);
-            StringAssert.Contains("24f", source);
+            StringAssert.Contains("// DeucarianEditorChrome.DrawPackageHeader", source);
+            StringAssert.Contains("DrawResetToDefaultsButton", source);
+            StringAssert.DoesNotContain(
+                "                DeucarianEditorChrome.DrawPackageHeader(",
+                source);
+            StringAssert.DoesNotContain("DrawCompactIconAction", source);
+            StringAssert.DoesNotContain("Reset to Defaults", source);
+            StringAssert.DoesNotContain("24f", source);
             StringAssert.DoesNotContain("GUILayout.Button(resetContent)", source);
         }
 
