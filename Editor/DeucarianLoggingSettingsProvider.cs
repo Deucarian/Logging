@@ -51,10 +51,12 @@ namespace Deucarian.Logging.Editor
             using (DeucarianEditorWorkbenchPanelScope page =
                    DeucarianEditorWorkbenchGUI.BeginSettingsPage(GUILayout.ExpandHeight(true)))
             {
-                DeucarianEditorChrome.DrawPackageHeader(
-                    "logging",
-                    "Deucarian Logging",
-                    "Configure editor defaults for the runtime logging dispatcher.");
+                // Package headers are intentionally disabled for now. Keep this call
+                // ready for a future UI pass without removing the shared implementation.
+                // DeucarianEditorChrome.DrawPackageHeader(
+                //     "logging",
+                //     "Deucarian Logging",
+                //     "Configure editor defaults for the runtime logging dispatcher.");
 
                 DeucarianEditorChrome.DrawSectionHeader("Runtime Settings");
                 DeucarianEditorChrome.BeginSection();
