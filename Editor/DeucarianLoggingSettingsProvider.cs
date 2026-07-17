@@ -48,46 +48,69 @@ namespace Deucarian.Logging.Editor
         /// <inheritdoc />
         public override void OnGUI(string searchContext)
         {
-            DeucarianEditorChrome.DrawPackageHeader(
-                "logging",
-                "Deucarian Logging",
-                "Configure editor defaults for the runtime logging dispatcher.");
-
-            DeucarianEditorChrome.DrawSectionHeader("Runtime Settings");
-            DeucarianEditorChrome.BeginSection();
-
-            EditorGUI.BeginChangeCheck();
-            bool enabled = EditorGUILayout.Toggle("Enabled", DeucarianLoggingEditorSettings.Enabled);
-            DeucarianLogLevel minimumLevel = (DeucarianLogLevel)EditorGUILayout.EnumPopup(
-                "Minimum Level",
-                DeucarianLoggingEditorSettings.MinimumLevel);
-            bool includeTimestamp = EditorGUILayout.Toggle(
-                "Include Timestamp",
-                DeucarianLoggingEditorSettings.IncludeTimestamp);
-            bool includeFrame = EditorGUILayout.Toggle(
-                "Include Frame",
-                DeucarianLoggingEditorSettings.IncludeFrame);
-            string prefix = EditorGUILayout.TextField("Prefix", DeucarianLoggingEditorSettings.Prefix);
-
-            if (EditorGUI.EndChangeCheck())
+            using (DeucarianEditorWorkbenchPanelScope page =
+                   DeucarianEditorWorkbenchGUI.BeginSettingsPage(GUILayout.ExpandHeight(true)))
             {
-                DeucarianLoggingEditorSettings.SetValues(
-                    enabled,
-                    minimumLevel,
-                    includeTimestamp,
-                    includeFrame,
-                    prefix);
+                // Package headers are intentionally disabled for now. Keep this call
+                // ready for a future UI pass without removing the shared implementation.
+                // DeucarianEditorChrome.DrawPackageHeader(
+                //     "logging",
+                //     "Deucarian Logging",
+                //     "Configure editor defaults for the runtime logging dispatcher.");
+
+                DeucarianEditorChrome.DrawSectionHeader("Runtime Settings");
+                DeucarianEditorChrome.BeginSection();
+
+                EditorGUI.BeginChangeCheck();
+                Rect enabledRect = DeucarianEditorWorkbenchGUI.DrawLabeledField(
+                    "Enabled",
+                    "Enable or disable the runtime logging dispatcher.");
+                bool enabled = EditorGUI.Toggle(
+                    enabledRect,
+                    DeucarianLoggingEditorSettings.Enabled);
+                Rect levelRect = DeucarianEditorWorkbenchGUI.DrawLabeledField(
+                    "Minimum Level",
+                    "Messages below this severity are ignored.");
+                DeucarianLogLevel minimumLevel = (DeucarianLogLevel)EditorGUI.EnumPopup(
+                    levelRect,
+                    DeucarianLoggingEditorSettings.MinimumLevel);
+                Rect timestampRect = DeucarianEditorWorkbenchGUI.DrawLabeledField(
+                    "Include Timestamp",
+                    "Prefix log entries with a timestamp.");
+                bool includeTimestamp = EditorGUI.Toggle(
+                    timestampRect,
+                    DeucarianLoggingEditorSettings.IncludeTimestamp);
+                Rect frameRect = DeucarianEditorWorkbenchGUI.DrawLabeledField(
+                    "Include Frame",
+                    "Include the Unity frame number in log entries.");
+                bool includeFrame = EditorGUI.Toggle(
+                    frameRect,
+                    DeucarianLoggingEditorSettings.IncludeFrame);
+                Rect prefixRect = DeucarianEditorWorkbenchGUI.DrawLabeledField(
+                    "Prefix",
+                    "Text prepended to Deucarian log entries.");
+                string prefix = EditorGUI.TextField(
+                    prefixRect,
+                    DeucarianLoggingEditorSettings.Prefix);
+
+                if (EditorGUI.EndChangeCheck())
+                {
+                    DeucarianLoggingEditorSettings.SetValues(
+                        enabled,
+                        minimumLevel,
+                        includeTimestamp,
+                        includeFrame,
+                        prefix);
+                }
+
+                EditorGUILayout.Space(DeucarianEditorLayoutMetrics.SurfaceVerticalPadding);
+                DeucarianEditorSettingsActions.DrawResetToDefaultsButton(
+                    DeucarianLoggingEditorSettings.ResetToDefaults,
+                    "Restore the package logging defaults.");
+
+                DeucarianEditorChrome.EndSection();
+                DeucarianEditorChrome.DrawFooterVersion("com.deucarian.logging", "1.0.1");
             }
-
-            EditorGUILayout.Space();
-
-            if (GUILayout.Button("Reset to Defaults"))
-            {
-                DeucarianLoggingEditorSettings.ResetToDefaults();
-            }
-
-            DeucarianEditorChrome.EndSection();
-            DeucarianEditorChrome.DrawFooterVersion("com.deucarian.logging", "1.0.1");
         }
     }
 }

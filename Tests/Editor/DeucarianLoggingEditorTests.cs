@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using Deucarian.Editor;
 using NUnit.Framework;
 using UnityEditor;
 
@@ -56,6 +58,47 @@ namespace Deucarian.Logging.Editor.Tests
             Assert.DoesNotThrow(() => provider = DeucarianLoggingSettingsProvider.CreateProvider());
             Assert.IsNotNull(provider);
             Assert.AreEqual(DeucarianLoggingSettingsProvider.SettingsPath, provider.settingsPath);
+        }
+
+        [Test]
+        public void LoggingAndResetIconsComeFromSharedEditorShell()
+        {
+            Assert.NotNull(DeucarianEditorIcons.GetPackageIcon("logging"));
+            Assert.NotNull(DeucarianEditorIcons.GetIcon(DeucarianEditorIconIds.Reset));
+            Assert.AreEqual(
+                "Reset to Defaults",
+                DeucarianEditorIcons.GetIconContent(
+                    DeucarianEditorIconIds.Reset,
+                    "Reset to Defaults").text);
+        }
+
+        [Test]
+        public void SettingsProviderUsesSharedThemedPageAndCompactControls()
+        {
+            const string sourcePath =
+                "Packages/com.deucarian.logging/Editor/DeucarianLoggingSettingsProvider.cs";
+            UnityEditor.PackageManager.PackageInfo package =
+                UnityEditor.PackageManager.PackageInfo.FindForAssetPath(sourcePath);
+            Assert.NotNull(package);
+            string source = File.ReadAllText(Path.Combine(
+                package.resolvedPath,
+                "Editor/DeucarianLoggingSettingsProvider.cs"));
+
+            StringAssert.Contains("BeginSettingsPage", source);
+            StringAssert.DoesNotContain("BeginEmbeddedPage", source);
+            StringAssert.Contains("DrawLabeledField", source);
+            StringAssert.Contains(
+                "DeucarianEditorLayoutMetrics.SurfaceVerticalPadding",
+                source);
+            StringAssert.Contains("// DeucarianEditorChrome.DrawPackageHeader", source);
+            StringAssert.Contains("DrawResetToDefaultsButton", source);
+            StringAssert.DoesNotContain(
+                "                DeucarianEditorChrome.DrawPackageHeader(",
+                source);
+            StringAssert.DoesNotContain("DrawCompactIconAction", source);
+            StringAssert.DoesNotContain("Reset to Defaults", source);
+            StringAssert.DoesNotContain("24f", source);
+            StringAssert.DoesNotContain("GUILayout.Button(resetContent)", source);
         }
 
         [Test]
