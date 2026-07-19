@@ -8,7 +8,7 @@ namespace Deucarian.Logging.Editor
     /// </summary>
     public static class DeucarianLoggingMenu
     {
-        private const string MenuRoot = "Tools/Deucarian/Logging/";
+        private const string MenuRoot = "Tools/Deucarian/Infrastructure/Logging/";
         private static readonly DLog EditorLog = DLog.For("Logging.Editor");
 
         /// <summary>
