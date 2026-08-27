@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## [1.0.3] - 2026-08-26
+
+### Changed
+
+- Derived the settings footer from installed package metadata instead of a
+  hardcoded package version.
+- Updated the exact Editor dependency to 1.1.0.
+
 ## [1.0.2] - 2026-07-17
 
 ### Changed
