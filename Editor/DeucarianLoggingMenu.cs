@@ -4,17 +4,15 @@ using UnityEditor;
 namespace Deucarian.Logging.Editor
 {
     /// <summary>
-    /// Unity editor menu items for Deucarian logging.
+    /// Logging actions surfaced through Deucarian Control Center.
     /// </summary>
     public static class DeucarianLoggingMenu
     {
-        private const string MenuRoot = "Tools/Deucarian/Infrastructure/Logging/";
         private static readonly DLog EditorLog = DLog.For("Logging.Editor");
 
         /// <summary>
         /// Opens the Deucarian logging page in Project Settings.
         /// </summary>
-        [MenuItem(MenuRoot + "Open Logging Settings")]
         public static void OpenLoggingSettings()
         {
             SettingsService.OpenProjectSettings(DeucarianLoggingSettingsProvider.SettingsPath);
@@ -23,7 +21,6 @@ namespace Deucarian.Logging.Editor
         /// <summary>
         /// Restores editor logging settings to their defaults.
         /// </summary>
-        [MenuItem(MenuRoot + "Reset Logging Settings")]
         public static void ResetLoggingSettings()
         {
             DeucarianLoggingEditorSettings.ResetToDefaults();
@@ -33,7 +30,6 @@ namespace Deucarian.Logging.Editor
         /// <summary>
         /// Emits one example message per log level through the Deucarian logger.
         /// </summary>
-        [MenuItem(MenuRoot + "Test Log Messages")]
         public static void TestLogMessages()
         {
             bool previousEnabled = DeucarianLogSettings.Enabled;

@@ -6,7 +6,7 @@
 
 It exists so package code can use one tiny logging API without bringing in a large logging framework. This package intentionally does not depend on `com.unity.logging`.
 
-Current package version: `1.0.3`.
+Current package version: `1.0.4`.
 
 ## When to use it
 
@@ -272,7 +272,7 @@ Where supported, trivial wrapper methods use `UnityEngine.HideInCallstack` behin
 
 In the Unity Editor, these values can be edited at **Project Settings > Deucarian > Logging**. The settings UI uses `com.deucarian.editor` for fixed Deucarian editor chrome while keeping logging runtime code independent. The v0 editor settings are stored in `EditorPrefs` and applied to runtime static settings while in the Editor.
 
-Useful editor menu items live under **Tools > Deucarian > Logging**:
+Logging settings and deliberate maintenance actions live under **Tools > Deucarian > Control Center... > Developer**:
 
 - **Open Logging Settings**
 - **Reset Logging Settings**
