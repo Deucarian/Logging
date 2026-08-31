@@ -128,6 +128,19 @@ namespace Deucarian.Logging.Editor.Tests
             Assert.AreEqual("[Deucarian.Logging] Logging settings reset.", sink.Entries[0].Message);
         }
 
+        [Test]
+        public void ControlCenterCard_ExposesSanitizedSettingsAndGuardedActions()
+        {
+            DeucarianControlCenterCard card =
+                DeucarianLoggingCardProvider.CreateCard(true, DeucarianLogLevel.Warning);
+
+            Assert.AreEqual("logging.settings", card.Id);
+            Assert.AreEqual(DeucarianControlCenterArea.Developer, card.Area);
+            Assert.AreEqual("Enabled", card.StatusText);
+            Assert.IsTrue(card.Actions[1].RequiresConfirmation);
+            Assert.IsTrue(card.Actions[2].RequiresConfirmation);
+        }
+
         private sealed class CapturingSink : IDeucarianLogSink
         {
             private readonly List<DeucarianLogEntry> entries = new List<DeucarianLogEntry>();
