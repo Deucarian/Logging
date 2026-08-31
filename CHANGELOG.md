@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.4] - 2026-08-31
+
+- Registered Logging Settings and sanitized preference status with Deucarian Control Center.
+- Moved reset and test-message maintenance commands out of the global menu and marked them as confirmation-required actions.
+- Updated the shared editor dependency to `com.deucarian.editor` 1.2.0.
+
 All notable changes to this package will be documented in this file.
 
 ## [1.0.3] - 2026-08-26
