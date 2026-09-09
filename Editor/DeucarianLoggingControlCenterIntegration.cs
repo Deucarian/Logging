@@ -20,7 +20,12 @@ namespace Deucarian.Logging.Editor
                 PackageId,
                 "console.infoicon",
                 new[] { "logging", "console", "categories", "levels" },
-                30));
+                30, createPage: () =>
+                {
+                    var provider = DeucarianLoggingSettingsProvider.CreateProvider();
+                    return DeucarianEditorImGuiPage.Create(DeucarianToolIds.LoggingSettings,
+                        () => provider.OnGUI(string.Empty), provider.OnDeactivate);
+                }, navigationPath: "Diagnostics"));
             DeucarianControlCenterRegistry.RegisterCardProvider(
                 new DeucarianLoggingCardProvider());
         }
@@ -62,7 +67,7 @@ namespace Deucarian.Logging.Editor
                     new DeucarianControlCenterAction(
                         "logging.open-settings",
                         "Open Logging Settings",
-                        DeucarianLoggingMenu.OpenLoggingSettings),
+                        DeucarianLoggingMenu.OpenLoggingSettings, navigationToolId: DeucarianToolIds.LoggingSettings),
                     new DeucarianControlCenterAction(
                         "logging.reset-settings",
                         "Reset Logging Settings",
