@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.5] - 2026-09-09
+
+- Register package tooling and navigation actions as shared Control Center pages. Preserve the domain workflow while using Editor-owned submenus, in-window navigation, and UI scaling.
+
 ## [1.0.4] - 2026-08-31
 
 - Registered Logging Settings and sanitized preference status with Deucarian Control Center.
