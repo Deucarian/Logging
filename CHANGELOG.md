@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.7] - 2026-09-10
+
+### Fixed
+
+- Replace the embedded legacy Logging Settings panel with the shared Editor form: readable controls, aligned responsive fields, bounded form width, and no nested background.
+- Reuse the same Output and Formatting view in Control Center and Unity Project Settings; preserve immediate saving, runtime application, and reset behavior.
+- Refresh values when a page is revisited, attached, or focused without continuously polling settings or retaining closed views.
+
 ## [1.0.6] - 2026-09-09
 
 ### Changed
