@@ -6,7 +6,9 @@
 
 It exists so package code can use one tiny logging API without bringing in a large logging framework. This package intentionally does not depend on `com.unity.logging`.
 
-Current package version: `1.0.6`.
+Current package version: `1.0.7`.
+
+Logging Settings uses the shared Editor form in both Control Center and Project Settings. Output and Formatting controls save immediately to local editor preferences; Reset to Defaults restores the existing package defaults.
 
 ## When to use it
 

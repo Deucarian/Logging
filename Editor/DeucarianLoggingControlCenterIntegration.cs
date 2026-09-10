@@ -20,12 +20,7 @@ namespace Deucarian.Logging.Editor
                 PackageId,
                 "console.infoicon",
                 new[] { "logging", "console", "categories", "levels" },
-                30, createPage: () =>
-                {
-                    var provider = DeucarianLoggingSettingsProvider.CreateProvider();
-                    return DeucarianEditorImGuiPage.Create(DeucarianToolIds.LoggingSettings,
-                        () => provider.OnGUI(string.Empty), provider.OnDeactivate);
-                }, navigationPath: "Diagnostics"));
+                30, createPage: DeucarianLoggingSettingsPage.Create, navigationPath: "Diagnostics"));
             DeucarianControlCenterRegistry.RegisterCardProvider(
                 new DeucarianLoggingCardProvider());
         }

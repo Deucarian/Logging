@@ -1,8 +1,10 @@
 using System.Collections.Generic;
-using System.IO;
+using System.Collections;
 using Deucarian.Editor;
 using NUnit.Framework;
 using UnityEditor;
+using UnityEngine.TestTools;
+using UnityEngine.UIElements;
 
 namespace Deucarian.Logging.Editor.Tests
 {
@@ -73,33 +75,140 @@ namespace Deucarian.Logging.Editor.Tests
         }
 
         [Test]
-        public void SettingsProviderUsesSharedThemedPageAndCompactControls()
+        public void SettingsProviderAndControlCenterUseTheSameSharedFormWithoutLegacyPanels()
         {
-            const string sourcePath =
-                "Packages/com.deucarian.logging/Editor/DeucarianLoggingSettingsProvider.cs";
-            UnityEditor.PackageManager.PackageInfo package =
-                UnityEditor.PackageManager.PackageInfo.FindForAssetPath(sourcePath);
-            Assert.NotNull(package);
-            string source = File.ReadAllText(Path.Combine(
-                package.resolvedPath,
-                "Editor/DeucarianLoggingSettingsProvider.cs"));
+            var root = new VisualElement();
+            var provider = DeucarianLoggingSettingsProvider.CreateProvider();
+            try
+            {
+                provider.OnActivate(string.Empty, root);
+                Assert.AreEqual(1, root.Query<ScrollView>("logging-settings-form").ToList().Count);
+                Assert.AreEqual(0, root.Query<IMGUIContainer>().ToList().Count);
+                Assert.IsNull(root.Q("workspace-sidebar"), "Project Settings already supplies its own navigation.");
+                Assert.NotNull(root.Q<Toggle>("logging-enabled"));
+                Assert.NotNull(root.Q<PopupField<string>>("logging-minimum-level"));
+                Assert.NotNull(root.Q<TextField>("logging-prefix"));
+                provider.OnActivate(string.Empty, root);
+                Assert.AreEqual(1, root.Query<ScrollView>("logging-settings-form").ToList().Count);
+            }
+            finally { provider.OnDeactivate(); }
+            Assert.AreEqual(0, root.childCount);
+            Assert.DoesNotThrow(provider.OnDeactivate);
 
-            StringAssert.Contains("BeginSettingsPage", source);
-            StringAssert.DoesNotContain("BeginEmbeddedPage", source);
-            StringAssert.Contains("DrawLabeledField", source);
-            StringAssert.Contains(
-                "DeucarianEditorLayoutMetrics.SurfaceVerticalPadding",
-                source);
-            StringAssert.Contains("// DeucarianEditorChrome.DrawPackageHeader", source);
-            StringAssert.Contains("DrawResetToDefaultsButton", source);
-            StringAssert.DoesNotContain(
-                "                DeucarianEditorChrome.DrawPackageHeader(",
-                source);
-            StringAssert.DoesNotContain("DrawCompactIconAction", source);
-            StringAssert.DoesNotContain("Reset to Defaults", source);
-            StringAssert.DoesNotContain("24f", source);
-            StringAssert.DoesNotContain("GUILayout.Button(resetContent)", source);
+            using (var page = DeucarianLoggingSettingsPage.Create())
+            {
+                Assert.NotNull(page.Root.Q("workspace-navigation"));
+                Assert.NotNull(page.Root.Q("logging-settings-form"));
+                Assert.AreEqual(0, page.Root.Query<IMGUIContainer>().ToList().Count);
+                Assert.NotNull(page.Root.Q<SliderInt>("workspace-scale-slider"));
+            }
         }
+
+        [Test]
+        public void FormEditsPersistImmediatelyAndPreserveUneditedSettings()
+        {
+            DeucarianLoggingEditorSettings.SetValues(true, DeucarianLogLevel.Debug, true, true, "Original");
+            using (var page = DeucarianLoggingSettingsPage.Create())
+            {
+                page.Root.Q<Toggle>("logging-enabled").value = false;
+                Assert.IsFalse(DeucarianLoggingEditorSettings.Enabled);
+                Assert.IsFalse(DeucarianLogSettings.Enabled);
+                Assert.IsTrue(DeucarianLoggingEditorSettings.IncludeTimestamp);
+                Assert.AreEqual("Original", DeucarianLoggingEditorSettings.Prefix);
+
+                var level = page.Root.Q<PopupField<string>>("logging-minimum-level");
+                foreach (DeucarianLogLevel expected in System.Enum.GetValues(typeof(DeucarianLogLevel)))
+                {
+                    level.value = expected.ToString();
+                    Assert.AreEqual(expected, DeucarianLoggingEditorSettings.MinimumLevel);
+                    Assert.AreEqual(expected, DeucarianLogSettings.MinimumLevel);
+                }
+                page.Root.Q<Toggle>("logging-timestamp").value = false;
+                page.Root.Q<Toggle>("logging-frame").value = false;
+                page.Root.Q<TextField>("logging-prefix").value = string.Empty;
+                Assert.IsFalse(DeucarianLogSettings.IncludeTimestamp);
+                Assert.IsFalse(DeucarianLogSettings.IncludeFrame);
+                Assert.AreEqual(string.Empty, DeucarianLogSettings.Prefix);
+            }
+        }
+
+        [Test]
+        public void RevisitingPageRefreshesExternalChangesWithoutRebuildingFields()
+        {
+            using (var page = DeucarianLoggingSettingsPage.Create())
+            {
+                var prefix = page.Root.Q<TextField>("logging-prefix");
+                DeucarianLoggingEditorSettings.SetValues(false, DeucarianLogLevel.None, true, true, "External");
+                page.Deactivate();
+                page.Activate(null);
+                Assert.AreSame(prefix, page.Root.Q<TextField>("logging-prefix"));
+                Assert.AreEqual("External", prefix.value);
+                Assert.IsFalse(page.Root.Q<Toggle>("logging-enabled").value);
+                Assert.AreEqual("None", page.Root.Q<PopupField<string>>("logging-minimum-level").value);
+                Assert.IsTrue(page.Root.Q<Toggle>("logging-frame").value);
+            }
+        }
+
+        [Test]
+        public void DisposedFormCannotWritePreferencesThroughRetainedFields()
+        {
+            var root = new VisualElement();
+            var view = new DeucarianLoggingSettingsView(root);
+            var prefix = root.Q<TextField>("logging-prefix");
+            string previous = DeucarianLoggingEditorSettings.Prefix;
+            view.Dispose();
+            view.Dispose();
+            prefix.value = "Must not persist";
+            Assert.AreEqual(previous, DeucarianLoggingEditorSettings.Prefix);
+            Assert.AreEqual(0, root.childCount);
+        }
+
+        [UnityTest]
+        public IEnumerator SharedFormStaysReadableAtDifferentSizesAndResetUsesTheVisibleButton()
+        {
+            var window = UnityEngine.ScriptableObject.CreateInstance<LoggingFormTestWindow>();
+            int previousScale = DeucarianEditorAppearance.WorkspaceScalePercent;
+            window.Show();
+            try
+            {
+                using (var page = DeucarianLoggingSettingsPage.Create())
+                {
+                    window.rootVisualElement.Add(page.Root);
+                    foreach (int scale in new[] { 75, 100, 150 })
+                    {
+                        DeucarianEditorAppearance.WorkspaceScalePercent = scale;
+                        foreach (var size in new[] { new UnityEngine.Vector2(1480, 750), new UnityEngine.Vector2(820, 650) })
+                        {
+                            window.position = new UnityEngine.Rect(20, 20, size.x, size.y);
+                            for (int frame = 0; frame < 5; frame++) yield return null;
+                            var form = page.Root.Q<ScrollView>("logging-settings-form");
+                            Assert.Greater(form.resolvedStyle.height, 100);
+                            foreach (string id in new[] { "logging-enabled", "logging-minimum-level", "logging-timestamp", "logging-frame", "logging-prefix" })
+                            {
+                                var field = form.Q(id);
+                                Assert.GreaterOrEqual(field.resolvedStyle.height, 30, id);
+                                Assert.GreaterOrEqual(field.worldBound.xMin, form.worldBound.xMin - 1, id);
+                                Assert.LessOrEqual(field.worldBound.xMax, form.worldBound.xMax + 1, id);
+                            }
+                            Assert.LessOrEqual(form.Q("logging-prefix").parent.parent.resolvedStyle.width, 851);
+                        }
+                    }
+                    DeucarianLoggingEditorSettings.SetValues(false, DeucarianLogLevel.Error, true, true, "Reset me");
+                    page.Activate(null);
+                    var reset = page.Root.Q<Button>("logging-reset");
+                    reset.Focus();
+                    yield return null;
+                    using (var evt = NavigationSubmitEvent.GetPooled()) { evt.target = reset; reset.SendEvent(evt); }
+                    Assert.IsTrue(DeucarianLoggingEditorSettings.Enabled);
+                    Assert.AreEqual("Deucarian", page.Root.Q<TextField>("logging-prefix").value);
+                    Assert.AreEqual("Debug", page.Root.Q<PopupField<string>>("logging-minimum-level").value);
+                    Assert.IsFalse(page.Root.Q<Toggle>("logging-timestamp").value);
+                }
+            }
+            finally { window.Close(); DeucarianEditorAppearance.WorkspaceScalePercent = previousScale; }
+        }
+
+        public sealed class LoggingFormTestWindow : EditorWindow { }
 
         [Test]
         public void MenuResetRestoresExpectedDefaults()
