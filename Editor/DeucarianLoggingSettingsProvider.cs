@@ -1,117 +1,59 @@
 using System.Collections.Generic;
 using Deucarian.Editor;
 using UnityEditor;
-using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Deucarian.Logging.Editor
 {
-    /// <summary>
-    /// Project Settings page for editing Deucarian logging defaults in the Unity Editor.
-    /// </summary>
+    /// <summary>Unity Project Settings adapter for the shared Logging form.</summary>
     public sealed class DeucarianLoggingSettingsProvider : SettingsProvider
     {
-        /// <summary>
-        /// Settings path shown in Unity Project Settings.
-        /// </summary>
+        /// <summary>Settings path shown in Unity Project Settings.</summary>
         public const string SettingsPath = "Project/Deucarian/Logging";
+        private DeucarianEditorWorkbench workbench;
+        private DeucarianLoggingSettingsView view;
+        private VisualElement host;
 
-        /// <summary>
-        /// Creates a settings provider instance.
-        /// </summary>
-        /// <param name="path">Settings path.</param>
-        /// <param name="scope">Settings scope.</param>
-        public DeucarianLoggingSettingsProvider(string path, SettingsScope scope)
-            : base(path, scope)
+        /// <summary>Creates the editor settings provider.</summary>
+        public DeucarianLoggingSettingsProvider(string path, SettingsScope scope) : base(path, scope)
         {
-            keywords = new HashSet<string>
-            {
-                "Deucarian",
-                "Logging",
-                "DLog",
-                "Minimum",
-                "Timestamp",
-                "Frame",
-                "Prefix"
+            keywords = new HashSet<string> {
+                "Deucarian", "Logging", "DLog", "Minimum", "Timestamp", "Frame", "Prefix"
             };
         }
 
-        /// <summary>
-        /// Creates the Unity settings provider for Project Settings.
-        /// </summary>
-        /// <returns>The settings provider instance.</returns>
+        /// <summary>Creates the Unity Project Settings entry.</summary>
         [SettingsProvider]
-        public static SettingsProvider CreateProvider()
+        public static SettingsProvider CreateProvider() =>
+            new DeucarianLoggingSettingsProvider(SettingsPath, SettingsScope.Project);
+
+        /// <inheritdoc />
+        public override void OnActivate(string searchContext, VisualElement rootElement)
         {
-            return new DeucarianLoggingSettingsProvider(SettingsPath, SettingsScope.Project);
+            OnDeactivate();
+            base.OnActivate(searchContext, rootElement);
+            host = new VisualElement();
+            rootElement.Add(host);
+            host.AddToClassList("deucarian-workspace-host");
+            DeucarianEditorUIResources.TryAddStyleSheet(host, DeucarianEditorWorkspace.StyleSheetPath);
+            workbench = DeucarianEditorWorkbench.Create(host, new DeucarianEditorWorkbenchOptions {
+                IncludeToolbar = false
+            });
+            workbench.ShellContent.AddToClassList("deucarian-workspace");
+            workbench.Content.AddToClassList("dw-page");
+            view = new DeucarianLoggingSettingsView(workbench.Content);
         }
 
         /// <inheritdoc />
-        public override void OnGUI(string searchContext)
+        public override void OnDeactivate()
         {
-            using (DeucarianEditorWorkbenchPanelScope page =
-                   DeucarianEditorWorkbenchGUI.BeginSettingsPage(GUILayout.ExpandHeight(true)))
-            {
-                // Package headers are intentionally disabled for now. Keep this call
-                // ready for a future UI pass without removing the shared implementation.
-                // DeucarianEditorChrome.DrawPackageHeader(
-                //     "logging",
-                //     "Deucarian Logging",
-                //     "Configure editor defaults for the runtime logging dispatcher.");
-
-                DeucarianEditorChrome.DrawSectionHeader("Runtime Settings");
-                DeucarianEditorChrome.BeginSection();
-
-                EditorGUI.BeginChangeCheck();
-                Rect enabledRect = DeucarianEditorWorkbenchGUI.DrawLabeledField(
-                    "Enabled",
-                    "Enable or disable the runtime logging dispatcher.");
-                bool enabled = EditorGUI.Toggle(
-                    enabledRect,
-                    DeucarianLoggingEditorSettings.Enabled);
-                Rect levelRect = DeucarianEditorWorkbenchGUI.DrawLabeledField(
-                    "Minimum Level",
-                    "Messages below this severity are ignored.");
-                DeucarianLogLevel minimumLevel = (DeucarianLogLevel)EditorGUI.EnumPopup(
-                    levelRect,
-                    DeucarianLoggingEditorSettings.MinimumLevel);
-                Rect timestampRect = DeucarianEditorWorkbenchGUI.DrawLabeledField(
-                    "Include Timestamp",
-                    "Prefix log entries with a timestamp.");
-                bool includeTimestamp = EditorGUI.Toggle(
-                    timestampRect,
-                    DeucarianLoggingEditorSettings.IncludeTimestamp);
-                Rect frameRect = DeucarianEditorWorkbenchGUI.DrawLabeledField(
-                    "Include Frame",
-                    "Include the Unity frame number in log entries.");
-                bool includeFrame = EditorGUI.Toggle(
-                    frameRect,
-                    DeucarianLoggingEditorSettings.IncludeFrame);
-                Rect prefixRect = DeucarianEditorWorkbenchGUI.DrawLabeledField(
-                    "Prefix",
-                    "Text prepended to Deucarian log entries.");
-                string prefix = EditorGUI.TextField(
-                    prefixRect,
-                    DeucarianLoggingEditorSettings.Prefix);
-
-                if (EditorGUI.EndChangeCheck())
-                {
-                    DeucarianLoggingEditorSettings.SetValues(
-                        enabled,
-                        minimumLevel,
-                        includeTimestamp,
-                        includeFrame,
-                        prefix);
-                }
-
-                EditorGUILayout.Space(DeucarianEditorLayoutMetrics.SurfaceVerticalPadding);
-                DeucarianEditorSettingsActions.DrawResetToDefaultsButton(
-                    DeucarianLoggingEditorSettings.ResetToDefaults,
-                    "Restore the package logging defaults.");
-
-                DeucarianEditorChrome.EndSection();
-                DeucarianEditorChrome.DrawFooterVersion(
-                    "com.deucarian.logging");
-            }
+            view?.Dispose();
+            view = null;
+            workbench?.Dispose();
+            workbench = null;
+            host?.RemoveFromHierarchy();
+            host = null;
+            base.OnDeactivate();
         }
     }
 }
