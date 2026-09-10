@@ -104,32 +104,40 @@ namespace Deucarian.Logging.Editor.Tests
             }
         }
 
-        [Test]
-        public void FormEditsPersistImmediatelyAndPreserveUneditedSettings()
+        [UnityTest]
+        public IEnumerator FormEditsPersistImmediatelyAndPreserveUneditedSettings()
         {
             DeucarianLoggingEditorSettings.SetValues(true, DeucarianLogLevel.Debug, true, true, "Original");
-            using (var page = DeucarianLoggingSettingsPage.Create())
+            var window = UnityEngine.ScriptableObject.CreateInstance<LoggingFormTestWindow>();
+            window.Show();
+            try
             {
-                page.Root.Q<Toggle>("logging-enabled").value = false;
-                Assert.IsFalse(DeucarianLoggingEditorSettings.Enabled);
-                Assert.IsFalse(DeucarianLogSettings.Enabled);
-                Assert.IsTrue(DeucarianLoggingEditorSettings.IncludeTimestamp);
-                Assert.AreEqual("Original", DeucarianLoggingEditorSettings.Prefix);
-
-                var level = page.Root.Q<PopupField<string>>("logging-minimum-level");
-                foreach (DeucarianLogLevel expected in System.Enum.GetValues(typeof(DeucarianLogLevel)))
+                using (var page = DeucarianLoggingSettingsPage.Create())
                 {
-                    level.value = expected.ToString();
-                    Assert.AreEqual(expected, DeucarianLoggingEditorSettings.MinimumLevel);
-                    Assert.AreEqual(expected, DeucarianLogSettings.MinimumLevel);
+                    window.rootVisualElement.Add(page.Root);
+                    yield return null;
+                    page.Root.Q<Toggle>("logging-enabled").value = false;
+                    Assert.IsFalse(DeucarianLoggingEditorSettings.Enabled);
+                    Assert.IsFalse(DeucarianLogSettings.Enabled);
+                    Assert.IsTrue(DeucarianLoggingEditorSettings.IncludeTimestamp);
+                    Assert.AreEqual("Original", DeucarianLoggingEditorSettings.Prefix);
+
+                    var level = page.Root.Q<PopupField<string>>("logging-minimum-level");
+                    foreach (DeucarianLogLevel expected in System.Enum.GetValues(typeof(DeucarianLogLevel)))
+                    {
+                        level.value = expected.ToString();
+                        Assert.AreEqual(expected, DeucarianLoggingEditorSettings.MinimumLevel);
+                        Assert.AreEqual(expected, DeucarianLogSettings.MinimumLevel);
+                    }
+                    page.Root.Q<Toggle>("logging-timestamp").value = false;
+                    page.Root.Q<Toggle>("logging-frame").value = false;
+                    page.Root.Q<TextField>("logging-prefix").value = string.Empty;
+                    Assert.IsFalse(DeucarianLogSettings.IncludeTimestamp);
+                    Assert.IsFalse(DeucarianLogSettings.IncludeFrame);
+                    Assert.AreEqual(string.Empty, DeucarianLogSettings.Prefix);
                 }
-                page.Root.Q<Toggle>("logging-timestamp").value = false;
-                page.Root.Q<Toggle>("logging-frame").value = false;
-                page.Root.Q<TextField>("logging-prefix").value = string.Empty;
-                Assert.IsFalse(DeucarianLogSettings.IncludeTimestamp);
-                Assert.IsFalse(DeucarianLogSettings.IncludeFrame);
-                Assert.AreEqual(string.Empty, DeucarianLogSettings.Prefix);
             }
+            finally { window.Close(); }
         }
 
         [Test]
@@ -149,18 +157,50 @@ namespace Deucarian.Logging.Editor.Tests
             }
         }
 
-        [Test]
-        public void DisposedFormCannotWritePreferencesThroughRetainedFields()
+        [UnityTest]
+        public IEnumerator DisposedFormCannotWritePreferencesThroughRetainedFields()
         {
-            var root = new VisualElement();
-            var view = new DeucarianLoggingSettingsView(root);
-            var prefix = root.Q<TextField>("logging-prefix");
-            string previous = DeucarianLoggingEditorSettings.Prefix;
-            view.Dispose();
-            view.Dispose();
-            prefix.value = "Must not persist";
-            Assert.AreEqual(previous, DeucarianLoggingEditorSettings.Prefix);
-            Assert.AreEqual(0, root.childCount);
+            var window = UnityEngine.ScriptableObject.CreateInstance<LoggingFormTestWindow>();
+            window.Show();
+            try
+            {
+                var root = window.rootVisualElement;
+                using (var view = new DeucarianLoggingSettingsView(root))
+                {
+                    var prefix = root.Q<TextField>("logging-prefix");
+                    yield return null;
+                    string previous = DeucarianLoggingEditorSettings.Prefix;
+                    view.Dispose();
+                    view.Dispose();
+                    Assert.AreEqual(0, root.childCount);
+                    root.Add(prefix);
+                    prefix.value = "Must not persist";
+                    Assert.AreEqual(previous, DeucarianLoggingEditorSettings.Prefix);
+                }
+            }
+            finally { window.Close(); }
+        }
+
+        [UnityTest]
+        public IEnumerator ProjectSettingsFormFillsItsHostAndSavesEdits()
+        {
+            var window = UnityEngine.ScriptableObject.CreateInstance<LoggingFormTestWindow>();
+            var provider = DeucarianLoggingSettingsProvider.CreateProvider();
+            window.Show();
+            try
+            {
+                window.position = new UnityEngine.Rect(20, 20, 820, 650);
+                provider.OnActivate(string.Empty, window.rootVisualElement);
+                for (int frame = 0; frame < 5; frame++) yield return null;
+                var form = window.rootVisualElement.Q<ScrollView>("logging-settings-form");
+                Assert.Greater(form.resolvedStyle.height, 100);
+                var prefix = form.Q<TextField>("logging-prefix");
+                Assert.GreaterOrEqual(prefix.resolvedStyle.height, 30);
+                Assert.LessOrEqual(prefix.worldBound.xMax, form.worldBound.xMax + 1);
+                prefix.value = "Project settings edit";
+                Assert.AreEqual("Project settings edit", DeucarianLoggingEditorSettings.Prefix);
+            }
+            finally { provider.OnDeactivate(); window.Close(); }
         }
 
         [UnityTest]
