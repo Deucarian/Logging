@@ -49,6 +49,7 @@ namespace Deucarian.Logging.Editor
             output.Actions.Add(reset);
             Root.RegisterCallback<AttachToPanelEvent>(OnAttached);
             Root.RegisterCallback<FocusInEvent>(OnFocus);
+            Refresh();
         }
 
         internal void Refresh()

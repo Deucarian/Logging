@@ -10,9 +10,8 @@ namespace Deucarian.Logging.Editor
     {
         /// <summary>Settings path shown in Unity Project Settings.</summary>
         public const string SettingsPath = "Project/Deucarian/Logging";
-        private DeucarianEditorWorkbench workbench;
+        private DeucarianEditorProjectSettingsPage page;
         private DeucarianLoggingSettingsView view;
-        private VisualElement host;
 
         /// <summary>Creates the editor settings provider.</summary>
         public DeucarianLoggingSettingsProvider(string path, SettingsScope scope) : base(path, scope)
@@ -32,18 +31,8 @@ namespace Deucarian.Logging.Editor
         {
             OnDeactivate();
             base.OnActivate(searchContext, rootElement);
-            host = new VisualElement();
-            rootElement.Add(host);
-            host.AddToClassList("deucarian-workspace-host");
-            DeucarianEditorUIResources.TryAddStyleSheet(host, DeucarianEditorWorkspace.StyleSheetPath);
-            DeucarianEditorUIResources.TryAddStyleSheet(host,
-                DeucarianEditorUIResources.StylesPath + "/DeucarianFeatures.uss");
-            workbench = DeucarianEditorWorkbench.Create(host, new DeucarianEditorWorkbenchOptions {
-                IncludeToolbar = false
-            });
-            workbench.ShellContent.AddToClassList("deucarian-workspace");
-            workbench.Content.AddToClassList("dw-page");
-            view = new DeucarianLoggingSettingsView(workbench.Content);
+            page = new DeucarianEditorProjectSettingsPage(rootElement, "Logging", "Choose which messages appear and what each entry includes.");
+            view = new DeucarianLoggingSettingsView(page.Content);
         }
 
         /// <inheritdoc />
@@ -51,10 +40,8 @@ namespace Deucarian.Logging.Editor
         {
             view?.Dispose();
             view = null;
-            workbench?.Dispose();
-            workbench = null;
-            host?.RemoveFromHierarchy();
-            host = null;
+            page?.Dispose();
+            page = null;
             base.OnDeactivate();
         }
     }
