@@ -184,6 +184,7 @@ namespace Deucarian.Logging.Editor.Tests
         [UnityTest]
         public IEnumerator ProjectSettingsFormFillsItsHostAndSavesEdits()
         {
+            DeucarianLoggingEditorSettings.SetValues(true, DeucarianLogLevel.Warning, true, true, "Initial settings");
             var window = UnityEngine.ScriptableObject.CreateInstance<LoggingFormTestWindow>();
             var provider = DeucarianLoggingSettingsProvider.CreateProvider();
             window.Show();
@@ -191,6 +192,11 @@ namespace Deucarian.Logging.Editor.Tests
             {
                 window.position = new UnityEngine.Rect(20, 20, 820, 650);
                 provider.OnActivate(string.Empty, window.rootVisualElement);
+                Assert.IsTrue(window.rootVisualElement.Q<Toggle>("logging-enabled").value,
+                    "A provider attached to an existing panel must initialize without waiting for focus.");
+                Assert.AreEqual("Warning", window.rootVisualElement.Q<PopupField<string>>("logging-minimum-level").value);
+                Assert.AreEqual("Initial settings", window.rootVisualElement.Q<TextField>("logging-prefix").value);
+                StringAssert.Contains("Your message appears here", window.rootVisualElement.Q<Label>("logging-example").text);
                 for (int frame = 0; frame < 5; frame++) yield return null;
                 var form = window.rootVisualElement.Q<ScrollView>("logging-settings-form");
                 Assert.Greater(form.resolvedStyle.height, 100);
