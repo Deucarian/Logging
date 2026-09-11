@@ -36,6 +36,8 @@ namespace Deucarian.Logging.Editor
             rootElement.Add(host);
             host.AddToClassList("deucarian-workspace-host");
             DeucarianEditorUIResources.TryAddStyleSheet(host, DeucarianEditorWorkspace.StyleSheetPath);
+            DeucarianEditorUIResources.TryAddStyleSheet(host,
+                DeucarianEditorUIResources.StylesPath + "/DeucarianFeatures.uss");
             workbench = DeucarianEditorWorkbench.Create(host, new DeucarianEditorWorkbenchOptions {
                 IncludeToolbar = false
             });

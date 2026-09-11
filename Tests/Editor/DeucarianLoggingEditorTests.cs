@@ -230,7 +230,8 @@ namespace Deucarian.Logging.Editor.Tests
                                 Assert.GreaterOrEqual(field.worldBound.xMin, form.worldBound.xMin - 1, id);
                                 Assert.LessOrEqual(field.worldBound.xMax, form.worldBound.xMax + 1, id);
                             }
-                            Assert.LessOrEqual(form.Q("logging-prefix").parent.parent.resolvedStyle.width, 851);
+                            Assert.LessOrEqual(form.Q("logging-prefix").parent.parent.worldBound.xMax,
+                                form.contentViewport.worldBound.xMax + 1);
                         }
                     }
                     DeucarianLoggingEditorSettings.SetValues(false, DeucarianLogLevel.Error, true, true, "Reset me");

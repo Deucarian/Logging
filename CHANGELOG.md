@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.8] - 2026-09-11
+
+- Use the shared native logging form in Control Center and Project Settings with consistent field alignment and existing reset behavior.
+- Require Editor 1.10.6 for the shared native controls, typography, responsive layouts and accessible interaction states.
+
 ## [1.0.7] - 2026-09-10
 
 ### Fixed
