@@ -18,7 +18,7 @@ namespace Deucarian.Logging.Editor
                 DeucarianControlCenterArea.Developer,
                 DeucarianLoggingMenu.OpenLoggingSettings,
                 PackageId,
-                "console.infoicon",
+                "scroll-text",
                 new[] { "logging", "console", "categories", "levels" },
                 30, createPage: DeucarianLoggingSettingsPage.Create, navigationPath: "Diagnostics"));
             DeucarianControlCenterRegistry.RegisterCardProvider(

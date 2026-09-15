@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+- Reuse Editor's compact Project Settings shell while retaining the same logging settings form and Control Center presentation.
+- Initialize values and example output immediately when opening Project Settings, including when its host is already attached.
+
+## [1.0.8] - 2026-09-11
+
+- Use the shared native logging form in Control Center and Project Settings with consistent field alignment and existing reset behavior.
+- Require Editor 1.10.6 for the shared native controls, typography, responsive layouts and accessible interaction states.
+
 ## [1.0.7] - 2026-09-10
 
 ### Fixed

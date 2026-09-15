@@ -10,8 +10,8 @@ namespace Deucarian.Logging.Editor
         {
             var root = new VisualElement();
             var workspace = new DeucarianEditorWorkspace(root, Application.productName);
-            workspace.Title.text = "Logging Settings";
-            workspace.Subtitle.text = "Choose which messages you see and how they are formatted.";
+            workspace.Title.text = "Logging";
+            workspace.Subtitle.text = "Keep the Console useful.";
             DeucarianEditorWorkspaceNavigation.Populate(workspace, DeucarianToolIds.LoggingSettings);
             DeucarianEditorWorkspaceControls.Show(workspace.Tabs, false);
             DeucarianEditorWorkspaceControls.Show(workspace.Scope, false);
